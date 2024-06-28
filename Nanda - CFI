@@ -1,0 +1,234 @@
+pip install opencv-python
+
+pip install matplotlib
+
+import cv2
+import matplotlib.pyplot as plt
+import numpy as np
+
+image =cv2.imread("9135995.png")
+
+plt.imshow(cv2.cvtColor(image ,cv2.COLOR_BGR2RGB))
+
+
+
+print(image)
+
+print('Type of the image : ' , type(image))
+print()
+print('Shape of the image : {}'.format(image.shape))
+print('Image Hight {}'.format(image.shape[0]))
+print('Image Width {}'.format(image.shape[1]))
+print('Dimension of Image {}'.format(image.ndim))
+
+print('Image size {}'.format(image.size))
+print('Maximum RGB value in this image {}'.format(image.max()))
+print('Minimum RGB value in this image {}'.format(image.min()))
+
+print('Value of only R channel {}'.format(image[ 100, 50, 0]))
+print('Value of only G channel {}'.format(image[ 100, 50, 1]))
+print('Value of only B channel {}'.format(image[ 100, 50, 2]))
+
+def load_image(path):
+    image =cv2.imread(path)
+    if image.shape[2] ==3:
+        return image
+    else:
+        return cv2.cvtColor(image, cv2.COLOR_GRAY2BGR)
+image =load_image("9135995.png")
+gray_cv2=cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
+weights = [0.2989, 0.5870, 0.1140]
+gray_numpy= np.dot(image, weights).astype(np.uint8)
+plt.figure(figsize=(10,10))
+plt.subplot(131)
+plt.title("orignal image (BGR)")
+plt.imshow(cv2.cvtColor(image,cv2.COLOR_BGR2RGB))
+plt.axis('off')
+plt.subplot(132)
+plt.title("grayscale (opencv)")
+plt.imshow(gray_cv2,cmap='gray')
+plt.axis('off')
+plt.subplot(133)
+plt.title("grayscale (Numpy)")
+plt.imshow(gray_numpy,cmap='gray')
+plt.axis('off')
+plt.show()
+
+
+
+def apply_averaging_filter(image, kernel_size=20):
+    kernel = np.ones((kernel_size, kernel_size), np.float32) / (kernel_size**2)
+    #[1 1 1
+    # 1 1 1
+    # 1 1 1]
+    #[0.1 0.1 0.1
+    # 0.1 0.1 0.1
+    # 0.1 0.1 0.1]
+    return cv2. filter2D(image, -1, kernel)
+avg_image = apply_averaging_filter (gray_cv2)
+plt. imshow(avg_image, cmap="gray")
+
+
+
+def apply_sharp_filter(image):
+    kernel=np.array([[-1,-1,1],
+                     [1,9,-1],
+                     [-1,-1,-1]])
+    return cv2.filter2D(image,-1,kernel)
+def apply_gaussian_filter(image,kernel_size=15):
+    return cv2.GaussianBlur(image,(kernel_size,kernel_size),0)
+image=cv2.imread("9135995.png",cv2.IMREAD_GRAYSCALE)
+sharp_img=apply_sharp_filter(image)
+plt.imshow(sharp_img,cmap="gray")
+
+
+def apply_sharp_filter(image):
+    kernel=np.array([[1,0,-1],
+                     [-9,0,8],
+                     [-1,0,0]])
+    return cv2.filter2D(image,-1,kernel)
+def apply_gaussian_filter(image,kernel_size=15):
+    return cv2.GaussianBlur(image,(kernel_size,kernel_size),0)
+image=cv2.imread("9135995.png",cv2.IMREAD_GRAYSCALE)
+sharp_img=apply_sharp_filter(image)
+plt.imshow(sharp_img,cmap="gray")
+
+
+
+t_lower = 100
+t_upper = 10
+XXy = cv2.Canny(image, t_lower, t_upper)
+plt.imshow(XXy)
+
+
+
+contours, _ = cv2.findContours(XXy, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+plt.imshow(cv2.drawContours(image, contours, -1, (255, 0, 0), 2))
+
+
+
+image =cv2.imread("9135995.png")
+hi =format(image[ 100, 50, 0])
+plt.imshow(hi)
+
+
+
+image =cv2.imread("s.png")
+plt.imshow(image[:,:,1])
+
+
+
+image =cv2.imread("s.png")
+plt.subplot(131)
+plt.imshow(image[:,:,0])
+plt.subplot(132)
+plt.imshow(image[:,:,1])
+plt.subplot(133)
+plt.imshow(image[:,:,2])
+plt.imshow(image[:,:,2])
+
+
+
+i =cv2.imread("s.png")
+plt.subplot(131)
+plt.imshow(i[:,:,0])
+plt.subplot(132)
+plt.imshow(i[:,:,1])
+plt.subplot(133)
+plt.imshow(i[:,:,2])
+
+
+
+i =cv2.imread("n.webp")
+plt.imshow(i[:,:,2])
+
+
+
+import cv2
+# Load the cascade
+face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+# Read the input image
+img = cv2.imread("vi.webp")
+# Convert into grayscale
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+# Detect faces
+faces = face_cascade.detectMultiScale(gray, 1.1, 4)
+# Draw rectangle around the faces
+for (x, y, w, h) in faces:
+    cv2.rectangle(img, (x, y), (x+w, y+h), (255, 0, 0), 2)
+# Display the output
+cv2.imshow('img', img)
+cv2.waitKey()
+
+import cv2
+# Load the cascade
+face_cascade = cv2.CascadeClassifier('haarcascade_eye.xml')
+# To capture video from webcam.
+cap = cv2.VideoCapture(0)
+# To use a video file as input
+# cap = cv2.VideoCapture('filename.mp4')
+while True:
+    # Read the frame
+    _, img = cap.read()
+    # Convert to grayscale
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    # Detect the faces
+    faces = face_cascade.detectMultiScale(gray, 1.1, 4)
+    # Draw the rectangle around each face
+    for (x, y, w, h) in faces:
+        cv2.rectangle(img, (x, y), (x+w, y+h), (255, 0, 0), 2)
+    # Display
+    cv2.imshow('img', img)
+    # Stop if escape key is pressed
+    k = cv2.waitKey(30) & 0xff
+    if k==27:
+        break
+# Release the VideoCapture object
+cap.release()
+
+pip install mediapipe
+
+import cv2
+import mediapipe as mp
+import numpy as np
+import matplotlib.pyplot as plt
+
+img = cv2.imread("Pose.webp")
+# Getting the image's width and height.
+img_width = img.shape[1]
+img_height = img.shape[0]
+# Creating a figure and a set of axes.
+fig, ax = plt.subplots(figsize=(10, 5))
+ax.axis('off')
+ax.imshow(img [...,::-1])
+plt.show()
+
+
+
+
+
+mp_pose = mp.solutions.pose
+mp_drawing = mp.solutions.drawing_utils
+with mp_pose.Pose(static_image_mode=True) as pose:
+   
+    # Make a copy of the original image.
+    annotated_img = img.copy()
+    # Processes the image.
+    results = pose.process(img)
+    # Set the circle radius for drawing the 'landmarks'.
+    # The radius is scaled as a percentage of the image's height.
+    circle_radius = int(.007 * img_height)
+    # Specifies the drawing style for the 'landmarks'.
+    point_spec = mp_drawing.DrawingSpec(color=(220, 100, 0), thickness=-1, circle_radius=circle_radius)
+    # Specifies the drawing style for landmark connections.
+    line_spec = mp_drawing.DrawingSpec(color=(0, 255, 0), thickness=2)
+    # Draw the 'landmarks' on the image.
+    mp_drawing.draw_landmarks(annotated_img,
+                    landmark_list=results.pose_landmarks,
+                    connections=mp_pose.POSE_CONNECTIONS,
+                    landmark_drawing_spec=point_spec,
+                    connection_drawing_spec=line_spec)
+    fig, ax = plt.subplots(figsize=(10, 5))
+    ax.axis('off')
+    ax.imshow(annotated_img [...,::-1])
+    plt.show()
